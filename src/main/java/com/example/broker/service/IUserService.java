@@ -5,7 +5,7 @@ import com.example.broker.web.dto.UserDTO;
 
 public interface IUserService {
 
-    UserDTO getUser(long id);
+    UserDTO getUser(String username);
 
     UserDTO createUser(UserDTO user);
 
