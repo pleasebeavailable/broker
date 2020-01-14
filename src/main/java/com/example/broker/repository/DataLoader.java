@@ -7,6 +7,7 @@ import com.example.broker.repository.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,7 +94,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private User createUserPortfolio(String firstName) {
-        User user = new User(firstName, firstName, firstName+"last", firstName + "@email.com", "pass123");
+        User user = new User(firstName, firstName, firstName+"last", firstName + "@email.com", new BCryptPasswordEncoder().encode("pass123"));
         Portfolio portfolio = new Portfolio();
         portfolio.setUser(user);
         user.setPortfolio(portfolio);

@@ -20,7 +20,7 @@ public class Privilege {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
+    @ManyToMany(mappedBy = "privileges", fetch = FetchType.EAGER)
     private Collection<Role> roles;
 
     public long getId() {
