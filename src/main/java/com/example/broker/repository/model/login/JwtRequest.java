@@ -1,4 +1,4 @@
-package com.example.broker.repository.model;
+package com.example.broker.repository.model.login;
 
 import java.io.Serializable;
 

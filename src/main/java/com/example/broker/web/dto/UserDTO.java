@@ -1,5 +1,11 @@
 package com.example.broker.web.dto;
 
+import com.example.broker.repository.model.login.JwtResponse;
+import com.example.broker.repository.model.Role;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserDTO {
     private long id;
     private String username;
@@ -7,6 +13,27 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String password;
+    private List<Role> roles = new ArrayList<>();
+
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    private JwtResponse jwtResponse;
+
+    public JwtResponse getJwtResponse() {
+        return jwtResponse;
+    }
+
+    public void setJwtResponse(JwtResponse jwtResponse) {
+        this.jwtResponse = jwtResponse;
+    }
 
     public long getId() {
         return id;

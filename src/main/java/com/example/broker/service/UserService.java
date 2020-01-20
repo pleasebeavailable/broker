@@ -11,6 +11,7 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
+
     private ModelMapper modelMapper = new ModelMapper();
 
     @Override
@@ -21,5 +22,15 @@ public class UserService implements IUserService {
     @Override
     public UserDTO createUser(UserDTO user) {
         return null;
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

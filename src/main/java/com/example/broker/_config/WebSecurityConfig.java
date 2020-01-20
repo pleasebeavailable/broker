@@ -91,11 +91,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 frameOptions().
                 disable().
                 and().
-                exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
+                exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
                 authorizeRequests().
                 antMatchers("/api/register").permitAll().
                 antMatchers("/api/authenticate").permitAll().
