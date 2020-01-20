@@ -12,6 +12,7 @@ import com.example.broker.repository.model.login.JwtResponse;
 import com.example.broker.repository.model.signup.MessageResponse;
 import com.example.broker.repository.model.signup.SignUpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,12 +23,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
-public class AuthService implements IAuthService{
+public class AuthService implements IAuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -43,6 +46,12 @@ public class AuthService implements IAuthService{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private HttpServletRequest request;
 
     public ResponseEntity<?> authenticate(JwtRequest authenticationRequest) throws Exception {
         Authentication authentication = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -61,7 +70,7 @@ public class AuthService implements IAuthService{
     @Override
     public ResponseEntity<?> register(SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse(messageSource.getMessage("error.username.taken", null, request.getLocale())));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -70,12 +79,9 @@ public class AuthService implements IAuthService{
 
         // Create user account
         User user = new User(signUpRequest.getUsername(), signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()));
-        List<Role> roles = (List<Role>) signUpRequest.getRoles();
+        Role role = signUpRequest.getRole();
         List<Role> userRoles = new ArrayList<>();
-        roles.forEach(role -> {
-            Role userRole = roleRepository.findByName(role.getName());
-            userRoles.add(userRole);
-        });
+        userRoles.add(role);
 
         user.setRoles(userRoles);
         userRepository.save(user);

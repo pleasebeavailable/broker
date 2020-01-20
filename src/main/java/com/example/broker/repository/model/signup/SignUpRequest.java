@@ -11,15 +11,15 @@ public class SignUpRequest {
     private String lastName;
     private String email;
     private String password;
-    private Collection<Role> roles;
+    private Role role;
 
-    public SignUpRequest(String username, String firstName, String lastName, String email, String password, Collection<Role> roles) {
+    public SignUpRequest(String username, String firstName, String lastName, String email, String password, Role role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.roles = roles;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -42,7 +42,7 @@ public class SignUpRequest {
         return password;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 }
