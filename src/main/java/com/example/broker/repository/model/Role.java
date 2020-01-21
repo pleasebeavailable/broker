@@ -53,14 +53,6 @@ public class Role {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
-
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
-    }
-
     public void setPrivileges(Collection<Privilege> privileges) {
         this.privileges = privileges;
     }

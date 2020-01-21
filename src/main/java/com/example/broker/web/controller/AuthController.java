@@ -22,13 +22,11 @@ public class AuthController {
 
 
     @PostMapping("/authenticate")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         return authService.authenticate(authenticationRequest);
     }
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.register(signUpRequest);
     }

@@ -44,24 +44,6 @@ public class DataLoader implements ApplicationRunner {
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege, writePrivilege));
         createRoleIfNotFound("ROLE_GUEST", Arrays.asList(readPrivilege));
-
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        Role guestRole = roleRepository.findByName("ROLE_GUEST");
-
-        List<User> listOfUsers = new ArrayList<>();
-        User user;
-        user = createUserPortfolio("user1");
-        user.setRoles(Arrays.asList(userRole));
-        userRepository.save(user);
-
-        user = createUserPortfolio("user2");
-        user.setRoles(Arrays.asList(guestRole));
-        userRepository.save(user);
-
-        user = createUserPortfolio("admin");
-        user.setRoles(Arrays.asList(adminRole));
-        userRepository.save(user);
     }
 
     @Override
@@ -93,8 +75,9 @@ public class DataLoader implements ApplicationRunner {
         return role;
     }
 
-    private User createUserPortfolio(String firstName) {
-        User user = new User(firstName, firstName, firstName+"last", firstName + "@email.com", new BCryptPasswordEncoder().encode("pass123"));
+    @Transactional
+    public User createUserPortfolio(String firstName) {
+        User user = new User(firstName, firstName, firstName + "last", firstName + "@email.com", new BCryptPasswordEncoder().encode("pass123"));
         Portfolio portfolio = new Portfolio();
         portfolio.setUser(user);
         user.setPortfolio(portfolio);

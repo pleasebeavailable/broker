@@ -1,8 +1,5 @@
 package com.example.broker.repository.model.signup;
 
-import com.example.broker.repository.model.Role;
-
-import java.util.Collection;
 
 public class SignUpRequest {
 
@@ -11,9 +8,9 @@ public class SignUpRequest {
     private String lastName;
     private String email;
     private String password;
-    private Role role;
+    private String role;
 
-    public SignUpRequest(String username, String firstName, String lastName, String email, String password, Role role) {
+    public SignUpRequest(String username, String firstName, String lastName, String email, String password, String role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,7 +39,7 @@ public class SignUpRequest {
         return password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 }

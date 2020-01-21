@@ -7,7 +7,8 @@ import java.util.Collection;
 @Table(name = "privileges")
 public class Privilege {
 
-    public Privilege() {}
+    public Privilege() {
+    }
 
     public Privilege(String name) {
         this.name = name;

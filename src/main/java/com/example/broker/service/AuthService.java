@@ -3,14 +3,18 @@ package com.example.broker.service;
 import com.example.broker._security.JwtTokenUtil;
 import com.example.broker._security.UserDetailsImpl;
 import com.example.broker._security.UserDetailsServiceImpl;
+import com.example.broker.repository.PrivilegeRepository;
 import com.example.broker.repository.RoleRepository;
 import com.example.broker.repository.UserRepository;
+import com.example.broker.repository.model.Privilege;
 import com.example.broker.repository.model.Role;
 import com.example.broker.repository.model.User;
 import com.example.broker.repository.model.login.JwtRequest;
 import com.example.broker.repository.model.login.JwtResponse;
 import com.example.broker.repository.model.signup.MessageResponse;
 import com.example.broker.repository.model.signup.SignUpRequest;
+import com.example.broker.web.dto.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -22,36 +26,41 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthService implements IAuthService {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private MessageSource messageSource;
+    private HttpServletRequest request;
+    private PrivilegeRepository privilegeRepository;
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    private HttpServletRequest request;
+    public AuthService(
+            AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, RoleRepository roleRepository,
+            UserRepository userRepository, PasswordEncoder passwordEncoder, MessageSource messageSource,
+            HttpServletRequest request, PrivilegeRepository privilegeRepository
+    ) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.messageSource = messageSource;
+        this.request = request;
+        this.privilegeRepository = privilegeRepository;
+    }
 
     public ResponseEntity<?> authenticate(JwtRequest authenticationRequest) throws Exception {
         Authentication authentication = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -63,7 +72,6 @@ public class AuthService implements IAuthService {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
     }
 
@@ -76,14 +84,13 @@ public class AuthService implements IAuthService {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in user!"));
         }
-
         // Create user account
         User user = new User(signUpRequest.getUsername(), signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()));
-        Role role = signUpRequest.getRole();
+        Role role = roleRepository.findByName(signUpRequest.getRole());
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(role);
-
         user.setRoles(userRoles);
+
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
