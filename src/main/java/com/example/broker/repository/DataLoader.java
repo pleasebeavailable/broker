@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,15 @@ public class DataLoader implements ApplicationRunner {
     private PortfolioRepository portfolioRepository;
     private RoleRepository roleRepository;
     private PrivilegeRepository privilegeRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataLoader(UserRepository userRepository, PortfolioRepository portfolioRepository, RoleRepository roleRepository, PrivilegeRepository privilegeRepository) {
+    public DataLoader(UserRepository userRepository, PortfolioRepository portfolioRepository, RoleRepository roleRepository, PrivilegeRepository privilegeRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.portfolioRepository = portfolioRepository;
         this.roleRepository = roleRepository;
         this.privilegeRepository = privilegeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private void loadData() {
@@ -44,6 +47,13 @@ public class DataLoader implements ApplicationRunner {
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege, writePrivilege));
         createRoleIfNotFound("ROLE_GUEST", Arrays.asList(readPrivilege));
+//        Role role = roleRepository.findByName("ROLE_USER");
+//        List<Role> roles = new ArrayList<>();
+//        roles.add(role);
+//        User user = new User("user", "Ante", "Suki", "ante@email.com", passwordEncoder.encode("PeaceFrog"));
+//        user.setRoles(roles);
+//
+//        userRepository.save(user);
     }
 
     @Override

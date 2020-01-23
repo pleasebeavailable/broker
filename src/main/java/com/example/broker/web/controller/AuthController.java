@@ -3,10 +3,7 @@ package com.example.broker.web.controller;
 import com.example.broker.repository.model.login.JwtRequest;
 import com.example.broker.repository.model.signup.SignUpRequest;
 import com.example.broker.service.AuthService;
-import com.example.broker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
